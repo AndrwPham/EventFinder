@@ -1,10 +1,9 @@
 FIRECRAWL_QUERY_TEMPLATES = [
-    '"{speaker} upcoming event"',
-    '"{speaker} eventbrite'
+    'site:eventbrite.com "{speaker}"'
 ]
 
-FIRECRAWL_PER_QUERY_LIMIT = 6
-FIRECRAWL_TOTAL_CAP = 8
+FIRECRAWL_PER_QUERY_LIMIT = 20
+FIRECRAWL_TOTAL_CAP = 20
 
 BLOCKED_DOMAINS = {
     "facebook.com",

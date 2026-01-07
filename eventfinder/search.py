@@ -44,9 +44,15 @@ def search_event_urls_with_sources(speaker: str) -> dict[str, List[str]]:
         firecrawl_urls = firecrawl_future.result()
         eventbrite_urls = eventbrite_future.result()
 
+    firecrawl_urls = _dedupe_keep_order(firecrawl_urls)
+    eventbrite_urls = _dedupe_keep_order(eventbrite_urls)
+    if firecrawl_urls and eventbrite_urls:
+        seen = {url.lower() for url in firecrawl_urls}
+        eventbrite_urls = [url for url in eventbrite_urls if url.lower() not in seen]
+
     return {
-        "firecrawl": _dedupe_keep_order(firecrawl_urls),
-        "eventbrite": _dedupe_keep_order(eventbrite_urls),
+        "firecrawl": firecrawl_urls,
+        "eventbrite": eventbrite_urls,
     }
 
 
@@ -144,7 +150,9 @@ def _search_firecrawl(speaker: str) -> List[str]:
 
         urls.extend(_extract_urls(payload_data))
 
-    filtered = [url for url in urls if not _is_blocked_url(url)]
+    filtered = [
+        url for url in urls if not _is_blocked_url(url) and _is_firecrawl_event_url(url)
+    ]
     deduped = _dedupe_keep_order(filtered)
     return deduped[:FIRECRAWL_TOTAL_CAP]
 
@@ -192,6 +200,24 @@ def _is_blocked_url(url: str) -> bool:
         return True
     host = (parsed.hostname or "").lower()
     return any(host == domain or host.endswith(f".{domain}") for domain in BLOCKED_DOMAINS)
+
+
+def _is_firecrawl_event_url(url: str) -> bool:
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    host = (parsed.hostname or "").lower()
+    path = (parsed.path or "").lower()
+    if host.endswith("eventbrite.com"):
+        return "/e/" in path
+    if host.endswith("meetup.com"):
+        return "/e/" in path or "/events/" in path
+    if host.endswith("eventful.com"):
+        return "/event/" in path or "/events/" in path
+    if host.endswith("allevents.in"):
+        return "/event/" in path or "/events/" in path
+    return False
 
 
 def _dedupe_keep_order(items: Iterable[str]) -> List[str]:
