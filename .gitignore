@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.idea/
+
+# Output directories
+output/
+.output/
+
+# Flask
+instance/
+.webassets-cache
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
