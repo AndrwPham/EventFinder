@@ -1,9 +1,10 @@
 # EventFinder Docs
 
-**Note:** This is a work that I KISS. There are still many gaps like:
-- The output from the firecrawl search is not consistent
-- The output from the eventbrite listing search is empty
-- The works is tightly coupled with Eventbrite as I only extract data from their domain
+**Note:** This project is intentionally KISS, and there are still gaps:
+
+  - Firecrawl results are inconsistent.
+  - Eventbrite listing search often returns no URLs.
+  - Extraction is tightly coupled to Eventbrite because most parsing logic assumes their page structure.”
 
 ## Overview
 EventFinder is a minimal Flask API that searches public event sources by speaker name, fetches event pages, and extracts structured event data. The extraction pipeline prefers JSON-LD and Eventbrite server data, with an optional LLM fallback for speakers only.
