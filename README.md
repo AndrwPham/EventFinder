@@ -30,4 +30,5 @@ Provides a single Flask API endpoint that searches public sources for events by 
 ```
 
 ## Env vars
-- None required.
+- Firecrawler key
+- openai key
